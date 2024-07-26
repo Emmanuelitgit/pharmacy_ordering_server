@@ -25,7 +25,8 @@ dotenv.config();
 mongoose 
  .connect(process.env.CONNECTION_STRING, {
         useNewUrlParser: true,
-        useUnifiedTopology: true, })   
+        useUnifiedTopology: true,
+        serverSelectionTimeoutMS: 30000 })   
  .then(() => console.log("Database connected!"))
  .catch(err => console.log(err));
 
