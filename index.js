@@ -26,7 +26,7 @@ mongoose
  .connect(process.env.CONNECTION_STRING, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        serverSelectionTimeoutMS: 30000 })   
+        serverSelectionTimeoutMS: 60000 })   
  .then(() => console.log("Database connected!"))
  .catch(err => console.log(err));
 
