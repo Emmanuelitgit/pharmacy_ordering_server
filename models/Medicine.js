@@ -6,6 +6,9 @@ const MedicineSchema = new Schema({
     name:{
         type:String,
     },
+    file:{
+        type:String
+    }
 }, { timestamps: true })
 
 const Medicine = mongoose.model("Medicine", MedicineSchema)

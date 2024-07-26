@@ -3,10 +3,15 @@ const employeeRoute = require("./routes/empployee")
 const authRoute = require("./routes/auth")
 const appMiddleware = require("./middleware/middleware")
 const medicineRoute = require("./routes/medicine")
-const app = appMiddleware.app;
+const orderRoute = require("./routes/Order")
+const dotenv = require("dotenv")
+const app = appMiddleware.app
+dotenv.config();
+
+
 
 mongoose
-  .connect("mongodb://localhost:27017/pharmacy_db", {
+  .connect(process.env.CONNECTION_STRING, {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
@@ -17,10 +22,10 @@ mongoose
     console.log("Could not connect", err);
   });
 
-
 app.use("/", employeeRoute)
 app.use("/", authRoute)
 app.use("/", medicineRoute)
+app.use("/", orderRoute)
 
 
 app.listen(5000, ()=>{

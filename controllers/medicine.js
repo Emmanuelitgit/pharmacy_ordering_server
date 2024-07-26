@@ -4,9 +4,11 @@ const Medicine = require("../models/Medicine");
 const AddMedicine = async(req, res, next)=>{
     try {
       const {name} = req.body;
+      const file = req.file;
   
       const newMedicine = new Medicine({
-          name
+          name,
+          file:file?.filename
       });
       
       if(!newMedicine){
@@ -14,7 +16,7 @@ const AddMedicine = async(req, res, next)=>{
       }
       if(newMedicine){
           await newMedicine.save()
-          return res.status(201).json({message:'Inserted successfully', user:req.email})
+          return res.status(201).json({message:'Inserted successfully', user:req.email, file:file?.filename})
       }
     } catch (error) {
       console.log(error)
