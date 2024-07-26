@@ -30,6 +30,7 @@ mongoose
  .then(() => console.log("Database connected!"))
  .catch(err => console.log(err));
 
+
 app.use("/", employeeRoute)
 app.use("/", authRoute)
 app.use("/", medicineRoute)
