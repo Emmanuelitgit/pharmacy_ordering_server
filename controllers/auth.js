@@ -30,7 +30,8 @@ const Register = async (req, res, next) => {
     try {
       console.log("Request Body:", req.body); // Log request body to debug
       const { name, email, phone, password } = req.body;
-  
+      const file = req.file;
+
       if (!name || !email || !phone || !password) {
         return res.status(400).json({ message: 'All fields are required!' });
       }
@@ -42,7 +43,8 @@ const Register = async (req, res, next) => {
         name,
         email,
         phone,
-        password: hashedPassword
+        password: hashedPassword,
+        file:file?.filename
       });
   
       await newUser.save();

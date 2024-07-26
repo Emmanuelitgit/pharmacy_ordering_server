@@ -15,6 +15,9 @@ const UserSchema = new Schema({
     password:{
         type:String
     },
+    user_iamge:{
+        type:String
+    }
 }, { timestamps: true })
 
 const User = mongoose.model("User", UserSchema)
