@@ -15,7 +15,7 @@ const UserSchema = new Schema({
     password:{
         type:String
     },
-    user_iamge:{
+    file:{
         type:String
     }
 }, { timestamps: true })
