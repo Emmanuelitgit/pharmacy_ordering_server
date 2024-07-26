@@ -2,29 +2,71 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const nodemailer = require("nodemailer")
+const Otp = require("../models/Otp")
 
 
-// const transporter = nodemailer.createTransport({
-//     host: 'smtp.gmail.com',
-//     port: 587,
-//     secure: false,
-//     auth: {
-//       user: process.env.OTP_EMAIL,
-//       pass: process.env.OTP_PASS,
-//     },
-//   });
+const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    auth: {
+      user: "eyidana001@gmail.com",
+      pass: "rukq qdrd enur cfrk",
+    },
+  });
   
-//   transporter.verify(function (error, success) {
-//     if (error) {
-//       console.log("Transporter verification error:", error);
-//     } else {
-//       console.log("Server is ready to take our messages");
-//     }
-//   });
+  transporter.verify(function (error, success) {
+    if (error) {
+      console.log("Transporter verification error:", error);
+    } else {
+      console.log("Server is ready to take our messages");
+    }
+  });
 
-const senOtp = (req, res) =>{
-    const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
+const senOtp = async({user_id, email}) =>{
+    try {
+        const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
+
+        const mailOptions = {
+            from:"eyidana001@gmail.com",
+            to:email,
+            subject:"OTP Verification Code",
+            html:`<p>Enter ${otp} in the app to verify your email. Thank you for signing up into our app</p>`
+        }
+    
+        const expiresAt = Date.now() + 3600000; // 1 hour from now
+        const salt = 10;
+        const hashedOtp = bcrypt.hashSync(otp, salt)
+        const newOtp =  new Otp({
+            user_id,
+            otp:hashedOtp,
+            expiresAt
+        });
+    
+        if(!newOtp){
+            console.log("an error occurs in inserting otp")
+        }
+        if(newOtp){
+            await newOtp.save()
+            transporter.sendMail(mailOptions)
+        }
+    } catch (error) {
+        console.log(error)
+    }
 }
+
+// const verifyOtp = async()=>{
+//     const {otp} = req.body
+//     const userEixst = Otp.find(user_id)
+//     const hashedOtp = userEixst.otp
+
+//     if(hashedOtp){
+//         const isOtpMatched = bcrypt.compareSync(otp, hashedOtp)
+//         if(isOtpMatched){
+
+//         }
+//     }
+// }
 
 const Register = async (req, res, next) => {
     try {
@@ -48,7 +90,10 @@ const Register = async (req, res, next) => {
       });
   
       await newUser.save();
-      return res.status(201).json({ message: 'Inserted successfully' });
+      const otpResponse = senOtp({user_id:newUser?._id, email:newUser.email})
+      if(otpResponse){
+        return res.status(201).json({ message: 'Otp sent successfully' });
+      }
     } catch (error) {
       console.error("Error:", error);
       return res.status(500).json({ message: 'Internal server error' });
