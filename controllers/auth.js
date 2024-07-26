@@ -75,7 +75,7 @@ try {
     const refreshToken = jwt.sign({id:user._id, email:user.email}, "refresh_key", {expiresIn:'1h'});
     res.cookie("token", token, {maxAge:30000});
     res.cookie("refreshToken", refreshToken, {maxAge:6000000})
-    return res.status(200).json({message:'User validated successfully', refreshToken:refreshToken, token:token})
+    return res.status(200).json({message:'User validated successfully', refreshToken:refreshToken, token:token, user:user})
 
 } catch (error) {
     console.log(error)
