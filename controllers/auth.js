@@ -23,7 +23,7 @@ const transporter = nodemailer.createTransport({
     }
   });
 
-const senOtp = async({user_id, email}) =>{
+const senOtp = async({user_id, email, name}) =>{
     try {
         const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
 
@@ -31,7 +31,7 @@ const senOtp = async({user_id, email}) =>{
             from:"eyidana001@gmail.com",
             to:email,
             subject:"OTP Verification Code",
-            html:`<p>Enter ${otp} in the app to verify your email. Thank you for signing up into our app</p>`
+            html:`<p>Hey ${name}, Enter ${otp} in the app to verify your email. Thank you for signing up into our app</p>`
         }
     
         const expiresAt = Date.now() + 3600000; // 1 hour from now
@@ -90,7 +90,7 @@ const Register = async (req, res, next) => {
       });
   
       await newUser.save();
-      const otpResponse = senOtp({user_id:newUser?._id, email:newUser.email})
+      const otpResponse = senOtp({user_id:newUser?._id, email:newUser.email, name:newUser?.name})
       if(otpResponse){
         return res.status(201).json({ message: 'Otp sent successfully' });
       }
