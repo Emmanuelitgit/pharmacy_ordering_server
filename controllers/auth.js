@@ -169,7 +169,7 @@ try {
             return res.status(401).json({message:"Not verified"})
         }
     }
-    const token = jwt.sign({id:user._id, email:user.email}, "jwt_key", {expiresIn:'10s'});
+    const token = jwt.sign({id:user._id, email:user.email}, "jwt_key", {expiresIn:'1h'});
     const refreshToken = jwt.sign({id:user._id, email:user.email}, "refresh_key", {expiresIn:'1h'});
     res.cookie("token", token, {maxAge:30000});
     res.cookie("refreshToken", refreshToken, {maxAge:6000000})

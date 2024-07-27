@@ -2,7 +2,8 @@ const jwt = require("jsonwebtoken");
 
 const renewToken = async (req, res, next) => {
     try {
-        const refreshToken = req.headers['authorization']?.split(' ')[1]; // Extracting refresh token from headers
+        
+        const refreshToken = req.headers['authorization']?.split(' ')[1];
 
         if (!refreshToken) {
             return res.status(401).json({ message: "No token found" });
@@ -13,8 +14,8 @@ const renewToken = async (req, res, next) => {
                 console.log(err);
                 return res.status(401).json({ message: 'Refresh token has expired!' });
             } else {
-                const token = jwt.sign({ id: decoded.id, email: decoded.email }, "jwt_key", { expiresIn: '10s' });
-                res.setHeader('Authorization', `Bearer ${token}`);
+                const token = jwt.sign({ id: decoded.id, email: decoded.email }, "jwt_key", { expiresIn: '1h' });
+                res.cookie("token", token, { maxAge: 30000 });
                 req.email = decoded.email;
                 next();
             }
@@ -26,7 +27,7 @@ const renewToken = async (req, res, next) => {
 
 const authenticateToken = async (req, res, next) => {
     try {
-        const token = req.headers['authorization']?.split(' ')[1]; // Extracting token from headers
+        const token = req.headers['authorization']?.split(' ')[1];
 
         if (!token) {
             return renewToken(req, res, next);
