@@ -11,6 +11,9 @@ const OtpSchema = new Schema({
     },
     expiresAt:{
         type:Number
+    },
+    verify:{
+        type:Boolean
     }
 }, { timestamps: true })
 

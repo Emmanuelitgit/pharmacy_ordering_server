@@ -40,7 +40,8 @@ const senOtp = async({user_id, email, name}) =>{
         const newOtp =  new Otp({
             user_id,
             otp:hashedOtp,
-            expiresAt
+            expiresAt,
+            verify:false
         });
     
         if(!newOtp){
@@ -55,22 +56,68 @@ const senOtp = async({user_id, email, name}) =>{
     }
 }
 
-// const verifyOtp = async()=>{
-//     const {otp} = req.body
-//     const userEixst = Otp.find(user_id)
-//     const hashedOtp = userEixst.otp
 
-//     if(hashedOtp){
-//         const isOtpMatched = bcrypt.compareSync(otp, hashedOtp)
-//         if(isOtpMatched){
+const verifyOtp = async (req, res) => {
+    try {
+        const { otp } = req.body;
+        const user_id = req.params.id;
 
-//         }
-//     }
-// }
+        if (typeof otp !== 'string') {
+            return res.status(400).json({ message: 'OTP must be a string' });
+        }
+
+        const userExist = await Otp.findOne({ user_id }); 
+
+        if (!userExist) {
+            return res.status(404).json({ message: 'User OTP not found' });
+        }
+
+        const expiresAt = userExist.expiresAt;
+        if (expiresAt < Date.now()) {
+            const deleteUser = await Otp.findOneAndDelete({ user_id });
+            if (!deleteUser) {
+                return res.status(400).json({ message: 'Error deleting user OTP' });
+            }
+            return res.status(400).json({ message: 'OTP expired' });
+        }
+
+        const hashedOtp = userExist.otp;
+
+        const isHashedOtpMatch = bcrypt.compareSync(otp, hashedOtp); 
+        if (!isHashedOtpMatch) {
+            return res.status(400).json({ message: 'OTP not matched or invalid' });
+        } else {
+            const updateOtp = await Otp.findOneAndUpdate(
+                { user_id },
+                { $set: { verify: true } },
+                { new: true } 
+            );
+            if (!updateOtp) {
+                return res.status(400).json({ message: 'Error updating user OTP' });
+            }
+        }
+
+        const deleteOtp = await Otp.findOneAndDelete({ user_id });
+        if (!deleteOtp) {
+            return res.status(400).json({
+                message: 'Error verifying OTP',
+                status: 'Unverified'
+            });
+        }
+
+        return res.status(200).json({
+            message: 'OTP verified successfully',
+            status: 'Verified'
+        });
+    } catch (error) {
+        return res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+};
+
 
 const Register = async (req, res, next) => {
     try {
-      console.log("Request Body:", req.body); // Log request body to debug
+      console.log("Request Body:", req.body); 
       const { name, email, phone, password } = req.body;
       const file = req.file;
 
@@ -127,4 +174,4 @@ try {
 }
 }
 
-module.exports = {Register, Login};
+module.exports = {Register, Login, verifyOtp};

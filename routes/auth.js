@@ -8,5 +8,6 @@ const router = express.Router()
 
 router.post("/register", upload.single("file"), authRoute.Register)
 router.post("/login", authRoute.Login)
+router.post("/verify-otp/:id", authRoute.verifyOtp)
 
 module.exports = router
