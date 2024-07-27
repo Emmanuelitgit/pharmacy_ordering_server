@@ -25,7 +25,7 @@ const transporter = nodemailer.createTransport({
 
 const senOtp = async({user_id, email, name}) =>{
     try {
-        const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
+        const otp = `${Math.floor(100000 + Math.random() * 900000)}`;
 
         const mailOptions = {
             from:"eyidana001@gmail.com",
@@ -139,7 +139,7 @@ const Register = async (req, res, next) => {
       await newUser.save();
       const otpResponse = senOtp({user_id:newUser?._id, email:newUser.email, name:newUser?.name})
       if(otpResponse){
-        return res.status(201).json({ message: 'Otp sent successfully' });
+        return res.status(201).json({ message: 'Otp sent successfully', user:newUser });
       }
     } catch (error) {
       console.error("Error:", error);
