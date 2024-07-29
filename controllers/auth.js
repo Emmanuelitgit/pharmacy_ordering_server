@@ -181,10 +181,7 @@ try {
 }
 
 
-// controllers/authController.js
-const jwt = require('jsonwebtoken');
-
-exports.renewToken = async (req, res) => {
+const renewToken = async (req, res) => {
     try {
         const refreshToken = req.headers['authorization']?.split(' ')[1];
 

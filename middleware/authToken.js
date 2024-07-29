@@ -63,7 +63,7 @@ const authenticateToken = async (req, res, next) => {
         }
 
         jwt.verify(token, "jwt_key", (err, decoded) => {
-            if (err.name === "TokenExpiredError") {
+            if (err) {
                 console.log(err);
                 return res.status(401).json({ message: 'Invalid or expired token!' });
             }
