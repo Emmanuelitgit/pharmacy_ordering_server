@@ -169,7 +169,7 @@ try {
             return res.status(401).json({message:"Not verified"})
         }
     }
-    const token = jwt.sign({id:user._id, email:user.email}, "jwt_key", {expiresIn:'1h'});
+    const token = jwt.sign({id:user._id, email:user.email}, "jwt_key", {expiresIn:'10s'});
     const refreshToken = jwt.sign({id:user._id, email:user.email}, "refresh_key", {expiresIn:'1h'});
     res.cookie("token", token, {maxAge:30000});
     res.cookie("refreshToken", refreshToken, {maxAge:6000000})
@@ -194,7 +194,7 @@ renewToken = async (req, res) => {
                 console.log(err);
                 return res.status(401).json({ message: 'Refresh token has expired!' });
             } else {
-                const token = jwt.sign({ id: decoded.id, email: decoded.email }, "jwt_key", { expiresIn: '1h' });
+                const token = jwt.sign({ id: decoded.id, email: decoded.email }, "jwt_key", { expiresIn: '10s' });
                 res.status(200).json({ token });
             }
         });
