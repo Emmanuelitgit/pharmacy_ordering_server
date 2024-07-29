@@ -180,4 +180,29 @@ try {
 }
 }
 
-module.exports = {Register, Login, verifyOtp};
+
+renewToken = async (req, res) => {
+    try {
+        const refreshToken = req.headers['authorization']?.split(' ')[1];
+
+        if (!refreshToken) {
+            return res.status(401).json({ message: "No token found" });
+        }
+
+        jwt.verify(refreshToken, "refresh_key", (err, decoded) => {
+            if (err) {
+                console.log(err);
+                return res.status(401).json({ message: 'Refresh token has expired!' });
+            } else {
+                const token = jwt.sign({ id: decoded.id, email: decoded.email }, "jwt_key", { expiresIn: '1h' });
+                res.status(200).json({ token });
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+
+module.exports = {Register, Login, verifyOtp, renewToken};
