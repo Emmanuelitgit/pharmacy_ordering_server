@@ -185,6 +185,8 @@ const renewToken = async (req, res) => {
     try {
         const refreshToken = req.headers['authorization']?.split(' ')[1];
 
+        console.log(refreshToken)
+
         if (!refreshToken) {
             return res.status(401).json({ message: 'No token found' });
         }
