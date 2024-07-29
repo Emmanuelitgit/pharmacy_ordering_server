@@ -188,20 +188,20 @@ const renewToken = async (req, res) => {
         const refreshToken = req.headers['authorization']?.split(' ')[1];
 
         if (!refreshToken) {
-            return res.status(401).json({ message: 'No token found' });
+            return res.status(401).json({ message: 'No refresh token provided' });
         }
 
         jwt.verify(refreshToken, 'refresh_key', (err, decoded) => {
             if (err) {
                 console.log('Error verifying refresh token:', err);
-                return res.status(401).json({ message: 'Refresh token has expired!' });
+                return res.status(401).json({ message: 'Refresh token has expired or is invalid!' });
             } else {
-                const token = jwt.sign(
+                const newToken = jwt.sign(
                     { id: decoded.id, email: decoded.email },
                     'jwt_key',
-                    { expiresIn: '10s' } // 10 seconds expiration time
+                    { expiresIn: '10s' } // Adjust to your desired expiration time
                 );
-                return res.status(200).json({ token });
+                return res.status(200).json({ token: newToken });
             }
         });
     } catch (error) {
