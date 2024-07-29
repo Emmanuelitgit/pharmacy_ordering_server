@@ -181,11 +181,11 @@ try {
 }
 
 
+// controllers/authController.js
+
 const renewToken = async (req, res) => {
     try {
         const refreshToken = req.headers['authorization']?.split(' ')[1];
-
-        console.log(refreshToken)
 
         if (!refreshToken) {
             return res.status(401).json({ message: 'No token found' });
@@ -193,19 +193,19 @@ const renewToken = async (req, res) => {
 
         jwt.verify(refreshToken, 'refresh_key', (err, decoded) => {
             if (err) {
-                console.log(err);
+                console.log('Error verifying refresh token:', err);
                 return res.status(401).json({ message: 'Refresh token has expired!' });
             } else {
                 const token = jwt.sign(
                     { id: decoded.id, email: decoded.email },
                     'jwt_key',
-                    { expiresIn: '10s' } 
+                    { expiresIn: '10s' } // 10 seconds expiration time
                 );
                 return res.status(200).json({ token });
             }
         });
     } catch (error) {
-        console.log(error);
+        console.log('Internal server error:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
