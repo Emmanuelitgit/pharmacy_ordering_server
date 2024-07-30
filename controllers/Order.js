@@ -17,7 +17,7 @@ const PlaceOrder = async(req, res, next)=>{
           quantity:quantity,
           user:req?.email,
           name:medicine?.name,
-          price:medicine?.price
+          price:medicine?.price*quantity
       });
 
       console.log(typeof(medicine?.price))
