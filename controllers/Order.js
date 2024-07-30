@@ -16,7 +16,8 @@ const PlaceOrder = async(req, res, next)=>{
           medicine_id:medicine_id,
           quantity:quantity,
           user:req.email,
-          name:medicine.name
+          name:medicine.name,
+          price:medicine.price * quantity
       });
       
       if(!newOrder){

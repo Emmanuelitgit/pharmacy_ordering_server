@@ -14,6 +14,9 @@ const OrderSchema = new Schema({
     },
     name:{
         type:String
+    },
+    price:{
+        type:Number
     }
 }, { timestamps: true })
 

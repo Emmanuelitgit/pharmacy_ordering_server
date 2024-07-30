@@ -169,7 +169,7 @@ try {
             return res.status(401).json({message:"Not verified"})
         }
     }
-    const token = jwt.sign({id:user._id, email:user.email}, "jwt_key", {expiresIn:'10s'});
+    const token = jwt.sign({id:user._id, email:user.email}, "jwt_key", {expiresIn:'5m'});
     const refreshToken = jwt.sign({id:user._id, email:user.email}, "refresh_key", {expiresIn:'1h'});
     res.cookie("token", token, {maxAge:30000});
     res.cookie("refreshToken", refreshToken, {maxAge:6000000})
@@ -199,7 +199,7 @@ const renewToken = async (req, res) => {
                 const newToken = jwt.sign(
                     { id: decoded.id, email: decoded.email },
                     'jwt_key',
-                    { expiresIn: '10s' } // Adjust to your desired expiration time
+                    { expiresIn: '5m' } // Adjust to your desired expiration time
                 );
                 return res.status(200).json({ token: newToken });
             }
