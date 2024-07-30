@@ -8,6 +8,9 @@ const MedicineSchema = new Schema({
     },
     file:{
         type:String
+    },
+    price:{
+        type:Number
     }
 }, { timestamps: true })
 
