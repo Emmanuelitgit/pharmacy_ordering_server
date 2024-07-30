@@ -52,47 +52,45 @@
 
 // // middleware/authToken.js
 
-// const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 
-// const verifyToken = async (req, res, next) => {
-//     try {
-//         const token = await req.headers['authorization']?.split(' ')[1];
-
-//         if (!token) {
-//             return res.status(401).json({ message: "No token found" });
-//         }
-
-//         await jwt.verify(token, "jwt_key", (err, decoded) => {
-//             if (err) {
-//                 console.log(err);
-//                 return res.status(401).json({ message: 'Invalid or expired token!' });
-//             }
-//             req.email = decoded.email;
-//             next();
-//         });
-//     } catch (error) {
-//         console.log(error);
-//         res.status(500).json({ message: "Internal server error" });
-//     }
-// };
-
-// module.exports = { verifyToken };
-
-const jwt = require('jsonwebtoken');
-
-const verifyToken = async(req, res, next) => {
-    const token = await req.headers['authorization']?.split(' ')[1];
-    if (!token) {
-        return res.status(403).send('A token is required for authentication');
-    }
-
+const verifyToken = async (req, res, next) => {
     try {
-        const decoded = await jwt.verify(token, "jwt_key");
-        req.email = decoded.email;
-    } catch (err) {
-        return res.status(401).send('Invalid Token');
+        const token = await req.headers['authorization']?.split(' ')[1];
+
+        if (!token) {
+            return res.status(401).json({ message: "No token found" });
+        }
+
+        jwt.verify(token, "jwt_key", (err, decoded) => {
+            if (err) {
+                return res.status(401).json({ message: 'Invalid or expired token!' });
+            }
+            req.email = decoded.email;
+            next();
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error while verifying token!" });
     }
-    return next();
 };
 
-module.exports = {verifyToken};
+module.exports = { verifyToken };
+
+// const jwt = require('jsonwebtoken');
+
+// const verifyToken = async(req, res, next) => {
+//     const token = await req.headers['authorization']?.split(' ')[1];
+//     if (!token) {
+//         return res.status(403).send('A token is required for authentication');
+//     }
+
+//     try {
+//         const decoded = await jwt.verify(token, "jwt_key");
+//         req.email = decoded.email;
+//     } catch (err) {
+//         return res.status(401).send('Invalid Token');
+//     }
+//     return next();
+// };
+
+// module.exports = {verifyToken};
