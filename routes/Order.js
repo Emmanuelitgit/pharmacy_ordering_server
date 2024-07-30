@@ -1,6 +1,6 @@
 const express = require("express");
 const orderRoute = require("../controllers/Order");
-const authenticateToken = require("../middleware/authToken");
+const authenticateToken = require("../middleware/verifyToken");
 const authenticate = authenticateToken.authenticateToken;
 
 

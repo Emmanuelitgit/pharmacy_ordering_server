@@ -4,8 +4,6 @@ const authRoute = require("./routes/auth")
 const appMiddleware = require("./middleware/middleware")
 const medicineRoute = require("./routes/medicine")
 const orderRoute = require("./routes/Order")
-const authenticateToken = require("./middleware/authToken")
-const authenticate = authenticateToken.authenticateToken
 const dotenv = require("dotenv")
 const app = appMiddleware.app
 dotenv.config();
@@ -35,7 +33,7 @@ mongoose
 
 app.use("/", employeeRoute)
 app.use("/", authRoute)
-app.use("/", authenticate, medicineRoute)
+app.use("/", medicineRoute)
 app.use("/", orderRoute)
 
 

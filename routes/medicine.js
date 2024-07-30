@@ -1,17 +1,16 @@
 const medicineRoute = require("../controllers/medicine");
 const express = require("express");
-const authenticateToken = require("../middleware/authToken")
+const verifyToken = require("../middleware/verifyToken")
 const uploadPath = require("../middleware/middleware")
 const upload = uploadPath.upload
-const authenticate = authenticateToken.authenticateToken;
 
 const router = express.Router();
 
-router.post("/add-medicine", upload.single("file"), medicineRoute.AddMedicine);
-router.put("/update-medicine/:id", medicineRoute.UpdateMedicine);
-router.delete("/delete-medicine/:id", medicineRoute.DeleteMedicine);
-router.get("/all-medicine", medicineRoute.FetchAllMedicine);
-router.get("/single-medicine/:id", medicineRoute.FetchSingleMedicine);
+router.post("/add-medicine", verifyToken, upload.single("file"), medicineRoute.AddMedicine);
+router.put("/update-medicine/:id", verifyToken, medicineRoute.UpdateMedicine);
+router.delete("/delete-medicine/:id", verifyToken, medicineRoute.DeleteMedicine);
+router.get("/all-medicine", verifyToken, medicineRoute.FetchAllMedicine);
+router.get("/single-medicine/:id", verifyToken, medicineRoute.FetchSingleMedicine);
 
 
 module.exports = router;
