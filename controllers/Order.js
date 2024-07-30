@@ -15,10 +15,12 @@ const PlaceOrder = async(req, res, next)=>{
       const newOrder = new Order({
           medicine_id:medicine_id,
           quantity:quantity,
-          user:req.email,
-          name:medicine.name,
-          price:parseInt(medicine.price) * quantity
+          user:req?.email,
+          name:medicine?.name,
+          price:medicine?.price
       });
+
+      console.log(typeof(medicine?.price))
       
       if(!newOrder){
           return res.status(400).json({message:'Empty fields not allowed!'})
