@@ -7,11 +7,11 @@ const authenticate = authenticateToken.authenticateToken;
 
 const router = express.Router();
 
-router.post("/add-medicine", authenticate, upload.single("file"), medicineRoute.AddMedicine);
-router.put("/update-medicine/:id", authenticate, medicineRoute.UpdateMedicine);
-router.delete("/delete-medicine/:id", authenticate, medicineRoute.DeleteMedicine);
-router.get("/all-medicine", authenticate, medicineRoute.FetchAllMedicine);
-router.get("/single-medicine/:id", authenticate, medicineRoute.FetchSingleMedicine);
+router.post("/add-medicine", upload.single("file"), medicineRoute.AddMedicine);
+router.put("/update-medicine/:id", medicineRoute.UpdateMedicine);
+router.delete("/delete-medicine/:id", medicineRoute.DeleteMedicine);
+router.get("/all-medicine", medicineRoute.FetchAllMedicine);
+router.get("/single-medicine/:id", medicineRoute.FetchSingleMedicine);
 
 
 module.exports = router;
