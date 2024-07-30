@@ -54,7 +54,7 @@
 
 // const jwt = require("jsonwebtoken");
 
-// const authenticateToken = async (req, res, next) => {
+// const verifyToken = async (req, res, next) => {
 //     try {
 //         const token = await req.headers['authorization']?.split(' ')[1];
 
@@ -62,9 +62,9 @@
 //             return res.status(401).json({ message: "No token found" });
 //         }
 
-//         jwt.verify(token, "jwt_key", (err, decoded) => {
+//         await jwt.verify(token, "jwt_key", (err, decoded) => {
 //             if (err) {
-//                 console.log(err + "Token expired");
+//                 console.log(err);
 //                 return res.status(401).json({ message: 'Invalid or expired token!' });
 //             }
 //             req.email = decoded.email;
@@ -76,7 +76,7 @@
 //     }
 // };
 
-// module.exports = { authenticateToken };
+// module.exports = { verifyToken };
 
 const jwt = require('jsonwebtoken');
 
