@@ -3,7 +3,8 @@ const Medicine = require("../models/Medicine")
 
 const PlaceOrder = async(req, res, next)=>{
     try {
-      const {medicine_id, quantity} = req.body;
+      const medicine_id = req.params.id
+      const {quantity} = req.body;
 
       const medicine = await Medicine.findById(medicine_id)
 
