@@ -1,6 +1,7 @@
 const medicineRoute = require("../controllers/medicine");
 const express = require("express");
-const verifyToken = require("../middleware/verifyToken")
+const authToken = require("../middleware/verifyToken")
+const verifyToken = authToken.verifyToken
 const uploadPath = require("../middleware/middleware")
 const upload = uploadPath.upload
 

@@ -95,4 +95,4 @@ const verifyToken = async(req, res, next) => {
     return next();
 };
 
-module.exports = verifyToken;
+module.exports = {verifyToken};

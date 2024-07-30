@@ -1,6 +1,5 @@
 const express = require("express");
 const authRoute = require("../controllers/auth")
-const authenticateToken = require("../middleware/verifyToken")
 const uploadPath = require("../middleware/middleware")
 const upload = uploadPath.upload
 
