@@ -9,5 +9,7 @@ router.post("/register", upload.single("file"), authRoute.Register)
 router.post("/login", authRoute.Login)
 router.post("/verify-otp/:id", authRoute.verifyOtp)
 router.post("/renew-token", authRoute.renewToken);
+router.post("/payment", authRoute.initializePayment);
+router.get("/verify-payment/:reference", authRoute.verifyPayment);
 
 module.exports = router

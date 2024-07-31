@@ -3,6 +3,8 @@ const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const nodemailer = require("nodemailer")
 const Otp = require("../models/Otp")
+const axios = require("axios");
+require('dotenv').config();
 
 
 const transporter = nodemailer.createTransport({
@@ -210,5 +212,45 @@ const renewToken = async (req, res) => {
     }
 };
 
+const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
 
-module.exports = {Register, Login, verifyOtp, renewToken};
+const initializePayment = async(req, res)=>{
+    const { email, amount } = req.body;
+    try {
+        const response = await axios.post('https://api.paystack.co/transaction/initialize', {
+            email,
+            amount: amount * 100, 
+        }, {
+            headers: {
+                Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`,
+                'Content-Type': 'application/json',
+            },
+        });
+
+        res.json(response.data);
+    } catch (error) {
+        console.log(error)
+        res.status(500).send(error.message);
+    }
+}
+
+const verifyPayment = async(req, res)=>{
+    const { reference } = req.params;
+    try {
+        const response = await axios.get(`https://api.paystack.co/transaction/verify/${reference}`, {
+            headers: {
+                Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`,
+                'Content-Type': 'application/json',
+            },
+        });
+
+        res.json(response.data);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
+
+
+
+
+module.exports = {Register, Login, verifyOtp, renewToken, initializePayment, verifyPayment};
