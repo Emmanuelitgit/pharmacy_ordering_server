@@ -243,7 +243,6 @@ const verifyPayment = async(req, res)=>{
                 'Content-Type': 'application/json',
             },
         });
-
         res.json(response.data);
     } catch (error) {
         console.log(error)
