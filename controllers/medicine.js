@@ -3,11 +3,12 @@ const Medicine = require("../models/Medicine");
 
 const AddMedicine = async(req, res, next)=>{
     try {
-      const {name} = req.body;
+      const {name, price} = req.body;
       const file = req.file;
   
       const newMedicine = new Medicine({
           name,
+          price,
           file:file?.filename
       });
       
