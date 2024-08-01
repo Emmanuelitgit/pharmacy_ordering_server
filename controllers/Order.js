@@ -4,7 +4,7 @@ const Medicine = require("../models/Medicine")
 const PlaceOrder = async(req, res, next)=>{
     try {
       const medicine_id = req.params.id
-      const {quantity} = req.body;
+      const {quantity, location} = req.body;
 
       const medicine = await Medicine.findById(medicine_id)
 
@@ -17,7 +17,8 @@ const PlaceOrder = async(req, res, next)=>{
           quantity:quantity,
           user:req?.email,
           name:medicine?.name,
-          price:medicine?.price*quantity
+          price:medicine?.price*quantity,
+          location:location
       });
 
       console.log(typeof(medicine?.price))
