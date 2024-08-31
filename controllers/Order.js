@@ -52,5 +52,28 @@ const PlaceOrder = async(req, res, next)=>{
   }
 
 
+  const FetchAllOrder = async (req, res, next) => {
+    try {
+      const userEmail = req?.user; 
+  
+      const orders = await Order.find({ user: userEmail });
+  
+      if (!orders || orders.length === 0) {
+        return res.status(404).json({ message: 'No orders found for this user' });
+      }
+  
+      return res.status(200).json({
+        message: 'Orders fetched successfully',
+        orders: orders,
+        user: userEmail,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ message: 'An error occurred while fetching orders' });
+    }
+  };
+  
 
-  module.exports = {PlaceOrder, FetchAllOrders}
+
+
+  module.exports = {PlaceOrder, FetchAllOrders, FetchAllOrder}

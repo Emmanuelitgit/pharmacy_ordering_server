@@ -8,5 +8,7 @@ const router = express.Router()
 
 router.post("/place-order/:id", verifyToken, orderRoute.PlaceOrder)
 router.get("/all-orders", verifyToken, orderRoute.FetchAllOrders)
+router.get("/user-orders", verifyToken, orderRoute.FetchAllOrder)
+
 
 module.exports = router
