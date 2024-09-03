@@ -4,6 +4,8 @@ const authRoute = require("./routes/auth")
 const appMiddleware = require("./middleware/middleware")
 const medicineRoute = require("./routes/medicine")
 const orderRoute = require("./routes/Order")
+const appointmentRoute = require("./routes/appointment")
+const doctorRoute = require("./routes/doctor")
 const dotenv = require("dotenv")
 const app = appMiddleware.app
 dotenv.config();
@@ -35,6 +37,8 @@ app.use("/", employeeRoute)
 app.use("/", authRoute)
 app.use("/", medicineRoute)
 app.use("/", orderRoute)
+app.use("/", appointmentRoute)
+app.use("/", doctorRoute)
 
 
 app.listen(5000, ()=>{
