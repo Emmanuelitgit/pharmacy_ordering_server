@@ -55,7 +55,7 @@ const PlaceOrder = async(req, res, next)=>{
 
   const FetchAllOrder = async (req, res, next) => {
     try {
-      const userEmail = req?.user; 
+      const userEmail = req?.email; 
   
       const orders = await Order.find({ user: userEmail });
   
