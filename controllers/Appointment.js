@@ -88,7 +88,7 @@ const AddAppointment = async(req, res, next)=>{
     try {
         const user = req?.email;
         const appointment = await Appointment.find({user:user})
-        const doctor = await Doctor.find({_id:appointment?.doctor_id})
+        const doctor = await Doctor.findById(appointment?.doctor_id)
 
     if(!appointment ){
         return res.status(404).json({message:'Data not found'});
