@@ -18,6 +18,9 @@ const OrderSchema = new Schema({
     price:{
         type:Number
     },
+    file:{
+        type:String
+    },
     location:{
         type:String
     }

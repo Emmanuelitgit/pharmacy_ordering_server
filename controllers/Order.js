@@ -18,6 +18,7 @@ const PlaceOrder = async(req, res, next)=>{
           user:req?.email,
           name:medicine?.name,
           price:medicine?.price*quantity,
+          file:medicine?.file,
           location:location
       });
 
