@@ -11,7 +11,7 @@ router.post("/add-appointment", verifyToken, appointmentRoute.AddAppointment);
 router.put("/update-appointment/:id", verifyToken, appointmentRoute.UpdateAppointment);
 router.delete("/delete-appointment/:id", verifyToken, appointmentRoute.DeleteAppointment);
 router.get("/all-appointment", verifyToken, appointmentRoute.FetchAllAppointment);
-router.get("/single-appointment/:id", verifyToken, appointmentRoute.FetchSingleAppointment);
+router.get("/single-appointment", verifyToken, appointmentRoute.FetchSingleAppointment);
 
 
 module.exports = router;

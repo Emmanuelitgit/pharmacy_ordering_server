@@ -1,4 +1,5 @@
-const Appointment = require("../models/Appointment")
+const Appointment = require("../models/Appointment");
+const Doctor = require("../models/Doctor");
 
 const AddAppointment = async(req, res, next)=>{
     try {
@@ -85,14 +86,15 @@ const AddAppointment = async(req, res, next)=>{
 
   const FetchSingleAppointment = async(req, res, next)=>{
     try {
-        const {id} = req.params;
-        const appointment = await Appointment.findById(id)
+        const user = req?.email;
+        const appointment = await Appointment.find({user:user})
+        const doctor = await Doctor.find({_id:appointment?.doctor_id})
 
     if(!appointment ){
-        return res.status(404).json({message:'Data not found'})
+        return res.status(404).json({message:'Data not found'});
     }
     if(appointment ){
-        return res.status(200).json({message:'Appointment fetched successfully', appointment :appointment , user:req.email})
+        return res.status(200).json({message:'Appointment fetched successfully', appointment :{appointment, doctor} , user:req.email})
     }
     } catch (error) {
         console.log(error)
