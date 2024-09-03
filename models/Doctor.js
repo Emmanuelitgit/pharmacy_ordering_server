@@ -19,7 +19,7 @@ const DoctorSchema = new Schema({
         type:Number
     },
     file:{
-        type:String
+        type:File
     }
 }, { timestamps: true })
 
