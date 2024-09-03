@@ -12,7 +12,7 @@ const AddDoctor = async(req, res, next)=>{
           biography,
           epxperience,
           fee,
-          file:file?.filename
+          file:file?.filename,
       });
       
       if(!newDoctor){

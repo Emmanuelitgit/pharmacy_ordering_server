@@ -20,7 +20,7 @@ const DoctorSchema = new Schema({
     },
     file:{
         type:String
-    }
+    },
 }, { timestamps: true })
 
 const Doctor = mongoose.model("Doctor", DoctorSchema)
