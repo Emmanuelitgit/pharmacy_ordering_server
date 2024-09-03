@@ -3,11 +3,12 @@ const Doctor = require("../models/Doctor");
 
 const AddDoctor = async(req, res, next)=>{
     try {
-      const {name, biography, epxperience, fee } = req.body;
+      const {name, role, biography, epxperience, fee } = req.body;
       const file = req?.file
   
       const newDoctor  = new Doctor({
           name,
+          role,
           biography,
           epxperience,
           fee,
@@ -29,11 +30,12 @@ const AddDoctor = async(req, res, next)=>{
 
   const UpdateDoctor= async(req, res, next) =>{
     try {
-        const {name, biography, epxperience, fee } = req.body;
+        const {name, role, biography, epxperience, fee } = req.body;
         const file = req?.file
 
         const dataToUpdate = {
             name,
+            role,
             biography,
             epxperience,
             fee,

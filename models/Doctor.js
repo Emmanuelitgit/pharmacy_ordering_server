@@ -6,6 +6,9 @@ const DoctorSchema = new Schema({
     name:{
         type:String,
     },
+    role:{
+        type:String
+    },
     biography:{
         type:String
     },
