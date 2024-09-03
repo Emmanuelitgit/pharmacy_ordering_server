@@ -84,36 +84,21 @@ const AddAppointment = async(req, res, next)=>{
     }
   }
 
-  const FetchSingleAppointment = async (req, res, next) => {
+  const FetchSingleAppointment = async(req, res, next)=>{
     try {
-      const user = req?.email;
-  
-      const appointments = await Appointment.find({ user: user });
-  
-      if (!appointments || appointments.length === 0) {
-        return res.status(404).json({ message: 'No appointments found' });
-      }
-  
-      const appointmentsWithDoctor = await Promise.all(
-        appointments.map(async (appointment) => {
-          const doctor = await Doctor.findById(appointment.doctor_id);
-          return {
-            ...appointment.toObject(),
-            doctor, 
-          };
-        })
-      );
-  
-      return res.status(200).json({
-        message: 'Appointments fetched successfully',
-        appointments: appointmentsWithDoctor,
-        user: req.email,
-      });
-    } catch (error) {
-      console.log(error);
-      return res.status(500).json({ message: 'Server error' });
+        const user = req?.email;
+        const appointment = await Appointment.find({user:user})
+
+    if(!appointment ){
+        return res.status(404).json({message:'Data not found'});
     }
-  };  
+    if(appointment ){
+        return res.status(200).json({message:'Appointment fetched successfully', appointment:appointment , user:req.email})
+    }
+    } catch (error) {
+        console.log(error)
+    }
+  }
 
 
 

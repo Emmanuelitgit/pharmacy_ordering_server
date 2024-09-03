@@ -17,6 +17,15 @@ const AppointmentSchema = new Schema({
     },
     user:{
         type:String
+    },
+    doctor_name:{
+        type:String
+    },
+    doctor_role:{
+        type:String
+    },
+    doctor_profile:{
+        type:String
     }
 }, { timestamps: true })
 
