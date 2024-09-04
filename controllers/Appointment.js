@@ -6,7 +6,7 @@ const AddAppointment = async(req, res, next)=>{
       const {doctor_id, date, time, status} = req.body;
   
       const newAppointment  = new Appointment({
-          doctor_id,
+          doctor,
           date,
           time,
           status,
@@ -32,7 +32,7 @@ const AddAppointment = async(req, res, next)=>{
         const id = req.params.id
 
         const dataToUpdate = {
-            doctor_id,
+            doctor,
             date,
             time,
             status,
