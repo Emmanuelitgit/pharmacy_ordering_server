@@ -87,7 +87,7 @@ const AddAppointment = async(req, res, next)=>{
   const FetchSingleAppointment = async(req, res, next)=>{
     try {
         const user = req?.email;
-        const appointment = await Appointment.find({user:user})
+        const appointment = await Appointment.find({ user: user }).populate('doctor_id');
 
     if(!appointment ){
         return res.status(404).json({message:'Data not found'});
