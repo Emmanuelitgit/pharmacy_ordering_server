@@ -3,7 +3,7 @@ const Doctor = require("../models/Doctor");
 
 const AddAppointment = async(req, res, next)=>{
     try {
-      const {doctor_id, date, time, status} = req.body;
+      const {doctor, date, time, status} = req.body;
   
       const newAppointment  = new Appointment({
           doctor,
@@ -28,7 +28,7 @@ const AddAppointment = async(req, res, next)=>{
 
   const UpdateAppointment= async(req, res, next) =>{
     try {
-        const {doctor_id, date, time, status} = req.body;
+        const {doctor, date, time, status} = req.body;
         const id = req.params.id
 
         const dataToUpdate = {
