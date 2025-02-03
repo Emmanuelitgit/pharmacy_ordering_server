@@ -41,6 +41,6 @@ app.use("/", appointmentRoute)
 app.use("/", doctorRoute)
 
 
-app.listen(5000, ()=>{
-  console.log("listening at port 5000..")
+app.listen(3000, ()=>{
+  console.log("listening at port 3000..")
 })
