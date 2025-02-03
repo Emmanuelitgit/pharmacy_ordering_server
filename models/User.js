@@ -16,7 +16,8 @@ const UserSchema = new Schema({
         type:String
     },
     file:{
-        type:String
+        type:String,
+        require:false
     }
 }, { timestamps: true })
 

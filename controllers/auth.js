@@ -167,11 +167,11 @@ try {
     }
     const userId = Otp._id
     const verify = await Otp.findOne({userId});
-    if(verify){
-        if(verify.verify === false){
-            return res.status(401).json({message:"Not verified"})
-        }
-    }
+    // if(verify){
+    //     if(verify.verify === false){
+    //         return res.status(401).json({message:"Not verified"})
+    //     }
+    // }
     const token = jwt.sign({id:user._id, email:user.email}, "jwt_key", {expiresIn:'5m'});
     const refreshToken = jwt.sign({id:user._id, email:user.email}, "refresh_key", {expiresIn:'1h'});
     res.cookie("token", token, {maxAge:30000});
