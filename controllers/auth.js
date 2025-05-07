@@ -5,7 +5,9 @@ const nodemailer = require("nodemailer")
 const Otp = require("../models/Otp")
 const axios = require("axios");
 require('dotenv').config();
-
+const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
+const INITIALIZE_PAYMENT_ENDPOINT = process.env.INITIALIZE_PAYMENT_ENDPOINT;
+const VERIFY_PAYMENT_ENDPOINT = process.env.VERIFY_PAYMENT_ENDPOINT;
 
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
@@ -25,6 +27,15 @@ const transporter = nodemailer.createTransport({
     }
   });
 
+
+  /**
+   * @description this method is used to send otp codes to a user.
+   * @param {*} user_id
+   * @param {*} email 
+   * @param {*} name
+   * @returns 
+   * @date
+   */
 const senOtp = async({user_id, email, name}) =>{
     try {
         const otp = `${Math.floor(100000 + Math.random() * 900000)}`;
@@ -59,6 +70,13 @@ const senOtp = async({user_id, email, name}) =>{
 }
 
 
+ /**
+   * @description this method is used to send otp code entered by a user.
+   * @param {*} req
+   * @param {*} res
+   * @returns 
+   * @date
+   */
 const verifyOtp = async (req, res) => {
     try {
         const { otp } = req.body;
@@ -74,6 +92,7 @@ const verifyOtp = async (req, res) => {
             return res.status(404).json({ message: 'User OTP not found' });
         }
 
+        // chcking expiration time
         const expiresAt = userExist.expiresAt;
         if (expiresAt < Date.now()) {
             const deleteUser = await Otp.findOneAndDelete({ user_id });
@@ -83,12 +102,13 @@ const verifyOtp = async (req, res) => {
             return res.status(400).json({ message: 'OTP expired' });
         }
 
+        // comparing the otp against what is stored in the database. the otp stored in the database is hashed
         const hashedOtp = userExist.otp;
-
         const isHashedOtpMatch = bcrypt.compareSync(otp, hashedOtp); 
         if (!isHashedOtpMatch) {
             return res.status(400).json({ message: 'OTP not matched or invalid' });
         } else {
+            // chnge verification status to true
             const updateOtp = await Otp.findOneAndUpdate(
                 { user_id },
                 { $set: { verify: true } },
@@ -99,6 +119,7 @@ const verifyOtp = async (req, res) => {
             }
         }
 
+        // rmove otp after verification
         const deleteOtp = await Otp.findOneAndDelete({ user_id });
         if (!deleteOtp) {
             return res.status(400).json({
@@ -118,6 +139,14 @@ const verifyOtp = async (req, res) => {
 };
 
 
+ /**
+   * @description this method is used to onboard new user in to the system.
+   * @param {*} req 
+   * @param {*} res 
+   * @param {*} next 
+   * @returns 
+   * @date
+   */
 const Register = async (req, res, next) => {
     try {
       console.log("Request Body:", req.body); 
@@ -140,9 +169,17 @@ const Register = async (req, res, next) => {
       });
   
       await newUser.save();
-      const otpResponse = senOtp({user_id:newUser?._id, email:newUser.email, name:newUser?.name})
+      const otpResponse = senOtp({user_id:newUser?._id, email:newUser.email, name:newUser?.name});
+      
+      // mapping to restrict exposing some data to the client. ie password and other sensitive data.
+      const userRes = {
+        name:newUser?.email,
+        email:newUser ?.email,
+        phone:newUser ?.phone,
+        file:newUser?.file
+    }
       if(otpResponse){
-        return res.status(201).json({ message: 'Otp sent successfully', user:newUser });
+        return res.status(201).json({ message: 'Otp sent successfully', user:userRes });
       }
     } catch (error) {
       console.error("Error:", error);
@@ -150,6 +187,15 @@ const Register = async (req, res, next) => {
     }
   };  
 
+
+   /**
+   * @description this method is used to authenticate user credentials.
+   * @param {*} req 
+   * @param {*} res 
+   * @param {*} next 
+   * @returns 
+   * @date
+   */
 const Login = async(req, res)=>{
 try {
     const {email, password} = req.body
@@ -176,16 +222,30 @@ try {
     const refreshToken = jwt.sign({id:user._id, email:user.email}, "refresh_key", {expiresIn:'1h'});
     res.cookie("token", token, {maxAge:30000});
     res.cookie("refreshToken", refreshToken, {maxAge:6000000})
-    return res.status(200).json({message:'User validated successfully', refreshToken:refreshToken, token:token, user:user})
+
+    // mapping to restrict exposing some data to the client. ie password and other sensitive data.
+    const userRes = {
+        name:user?.email,
+        email:user?.email,
+        phone:user?.phone
+    }
+
+    return res.status(200).json({message:'User validated successfully', refreshToken:refreshToken, token:token, user:userRes})
 
 } catch (error) {
     console.log(error)
+    return res.status(500).json({message:'Internal server error!'})
 }
 }
 
 
-// controllers/authController.js
-
+  /**
+   * @description this method is used to handle refresh token operations.
+   * @param {*} req 
+   * @param {*} res 
+   * @returns 
+   * @date
+   */
 const renewToken = async (req, res) => {
     try {
         const refreshToken = req.headers['authorization']?.split(' ')[1];
@@ -202,7 +262,7 @@ const renewToken = async (req, res) => {
                 const newToken = jwt.sign(
                     { id: decoded.id, email: decoded.email },
                     'jwt_key',
-                    { expiresIn: '5m' } // Adjust to your desired expiration time
+                    { expiresIn: '5m' }
                 );
                 return res.status(200).json({ token: newToken });
             }
@@ -213,12 +273,17 @@ const renewToken = async (req, res) => {
     }
 };
 
-const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
-
+  /**
+   * @description this method is used to to initialize payment process.
+   * @param {*} req 
+   * @param {*} res 
+   * @returns 
+   * @date
+   */
 const initializePayment = async(req, res)=>{
     const { email, amount } = req.body;
     try {
-        const response = await axios.post('https://api.paystack.co/transaction/initialize', {
+        const response = await axios.post(`${INITIALIZE_PAYMENT_ENDPOINT}`, {
             email,
             amount: amount * 100, 
         }, {
@@ -230,15 +295,23 @@ const initializePayment = async(req, res)=>{
 
         res.json(response.data);
     } catch (error) {
-        console.log(error)
-        res.status(500).send(error.message);
+        cconsole.log(error)
+        return res.status(500).json({message:'Internal server error!'})
     }
 }
 
+
+  /**
+   * @description this method is used to verify payment status from paystack.
+   * @param {*} req 
+   * @param {*} res 
+   * @returns 
+   * @date
+   */
 const verifyPayment = async(req, res)=>{
     const { reference } = req.params;
     try {
-        const response = await axios.get(`https://api.paystack.co/transaction/verify/${reference}`, {
+        const response = await axios.get(`${VERIFY_PAYMENT_ENDPOINT}/${reference}`, {
             headers: {
                 Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`,
                 'Content-Type': 'application/json',
@@ -247,11 +320,9 @@ const verifyPayment = async(req, res)=>{
         res.json(response.data);
     } catch (error) {
         console.log(error)
-        res.status(500).send(error.message);
+        return res.status(500).json({message:'Internal server error!'})
     }
 }
-
-
 
 
 module.exports = {Register, Login, verifyOtp, renewToken, initializePayment, verifyPayment};

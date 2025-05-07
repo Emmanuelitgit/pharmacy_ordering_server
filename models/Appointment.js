@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
+
+/**
+   * @description this model is used to map to the Appointment entities in the database.
+   * @date
+   */
 const AppointmentSchema = new Schema({
     doctor: {
         type: mongoose.Schema.Types.ObjectId,

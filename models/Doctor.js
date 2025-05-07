@@ -2,6 +2,10 @@ const mongoose = require("mongoose")
 
 const Schema = mongoose.Schema;
 
+/**
+   * @description this model is used to map to the Doctor entities in the database.
+   * @date
+   */
 const DoctorSchema = new Schema({
     name:{
         type:String,

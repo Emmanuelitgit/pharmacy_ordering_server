@@ -1,6 +1,13 @@
 const Medicine = require("../models/Medicine");
 
-
+/**
+   * @description this method is used to save new medicine record.
+   * @param {*} req 
+   * @param {*} res 
+   * @param {*} next
+   * @returns 
+   * @date
+   */
 const AddMedicine = async(req, res, next)=>{
     try {
       const {name, price} = req.body;
@@ -20,11 +27,21 @@ const AddMedicine = async(req, res, next)=>{
           return res.status(201).json({message:'Inserted successfully', user:req.email, file:file?.filename})
       }
     } catch (error) {
-      console.log(error)
+        console.log(error)
+        return res.status(500).json({message:'Internal server error!'})
     }
       
   }
 
+
+  /**
+   * @description this method is used to update medicine record.
+   * @param {*} req 
+   * @param {*} res 
+   * @param {*} next
+   * @returns 
+   * @date
+   */
   const UpdateMedicine = async(req, res, next) =>{
     try {
         const {name, price, quantity, thumbnail} = req.body
@@ -45,10 +62,20 @@ const AddMedicine = async(req, res, next)=>{
             return res.status(200).json({message:"Medicine updated successfully", user:req.email})
         }
     } catch (error) {
-        
+        console.log(error)
+        return res.status(500).json({message:'Internal server error!'})
     }
   }
 
+
+    /**
+   * @description this method is used to remove medicine record.
+   * @param {*} req 
+   * @param {*} res 
+   * @param {*} next
+   * @returns 
+   * @date
+   */
   const DeleteMedicine = async(req, res, nesxt) =>{
     try {
         const id = req.params.id;
@@ -64,9 +91,19 @@ const AddMedicine = async(req, res, next)=>{
         }
     } catch (error) {
         console.log(error)
+        return res.status(500).json({message:'Internal server error!'})
     }
   }
 
+
+    /**
+   * @description this method is used to update all medinces and their records.
+   * @param {*} req 
+   * @param {*} res 
+   * @param {*} next
+   * @returns 
+   * @date
+   */
   const FetchAllMedicine = async(req, res, next) =>{
     try {
         const medicines = await Medicine.find()
@@ -79,9 +116,19 @@ const AddMedicine = async(req, res, next)=>{
     }
     } catch (error) {
         console.log(error)
+        return res.status(500).json({message:'Internal server error!'})
     }
   }
 
+
+    /**
+   * @description this method is used to fetch a medicine record given it id.
+   * @param {*} req 
+   * @param {*} res 
+   * @param {*} next
+   * @returns 
+   * @date
+   */
   const FetchSingleMedicine = async(req, res, next)=>{
     try {
         const {id} = req.params;
@@ -95,9 +142,9 @@ const AddMedicine = async(req, res, next)=>{
     }
     } catch (error) {
         console.log(error)
+        return res.status(500).json({message:'Internal server error!'})
     }
   }
-
 
 
   module.exports = {AddMedicine,UpdateMedicine, DeleteMedicine, FetchAllMedicine, FetchSingleMedicine}

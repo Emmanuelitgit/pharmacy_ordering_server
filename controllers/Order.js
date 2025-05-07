@@ -1,6 +1,15 @@
 const Order = require("../models/Order");
 const Medicine = require("../models/Medicine")
 
+
+ /**
+   * @description this method is used to save order record.
+   * @param {*} req 
+   * @param {*} res 
+   * @param {*} next 
+   * @returns 
+   * @date
+   */
 const PlaceOrder = async(req, res, next)=>{
     try {
       const medicine_id = req.params.id
@@ -32,11 +41,21 @@ const PlaceOrder = async(req, res, next)=>{
           return res.status(201).json({message:'Order placed successfully', user:req.email})
       }
     } catch (error) {
-      console.log(error)
+        console.log(error)
+        return res.status(500).json({message:'Internal server error!'})
     }
       
   }
 
+
+   /**
+   * @description this method is used to fetch all oreder and their records.
+   * @param {*} req 
+   * @param {*} res 
+   * @param {*} next 
+   * @returns 
+   * @date
+   */
   const FetchAllOrders = async(req, res, next) =>{
     try {
         const orders = await Order.find()
@@ -48,12 +67,21 @@ const PlaceOrder = async(req, res, next)=>{
         return res.status(200).json({message:'Orders fetched successfully', orders:orders, user:req.email})
     }
     } catch (error) {
-        console.log(error)
+      console.log(error)
+      return res.status(500).json({message:'Internal server error!'})
     }
   }
 
 
-  const FetchAllOrder = async (req, res, next) => {
+  /**
+   * @description this method is used to fetch all oreders for a user given the user email.
+   * @param {*} req 
+   * @param {*} res 
+   * @param {*} next 
+   * @returns 
+   * @date
+   */
+  const FetchOrderByUserEmail = async (req, res, next) => {
     try {
       const userEmail = req?.email; 
   
@@ -69,12 +97,12 @@ const PlaceOrder = async(req, res, next)=>{
         user: userEmail,
       });
     } catch (error) {
-      console.log(error);
-      return res.status(500).json({ message: 'An error occurred while fetching orders' });
+        console.log(error)
+        return res.status(500).json({message:'Internal server error!'})
     }
   };
   
 
 
 
-  module.exports = {PlaceOrder, FetchAllOrders, FetchAllOrder}
+  module.exports = {PlaceOrder, FetchAllOrders, FetchOrderByUserEmail}

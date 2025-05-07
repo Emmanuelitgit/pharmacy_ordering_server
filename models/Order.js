@@ -2,6 +2,10 @@ const mongoose = require("mongoose")
 
 const Schema = mongoose.Schema;
 
+/**
+   * @description this model is used to map to the Order entities in the database.
+   * @date
+   */
 const OrderSchema = new Schema({
     medicine_id:{
         type:String,

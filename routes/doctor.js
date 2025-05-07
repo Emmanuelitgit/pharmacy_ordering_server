@@ -11,7 +11,7 @@ router.post("/add-doctor", upload.single("file"), doctorRoute.AddDoctor);
 router.put("/update-doctor/:id", verifyToken, doctorRoute.UpdateDoctor);
 router.delete("/delete-doctor/:id", verifyToken, doctorRoute.DeleteDoctor);
 router.get("/all-doctor", verifyToken, doctorRoute.FetchAllDoctor);
-router.get("/single-doctor/:id", verifyToken, doctorRoute.FetchSingleDoctor);
+router.get("/single-doctor/:id", verifyToken, doctorRoute.FetchDoctorById);
 
 
 module.exports = router;

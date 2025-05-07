@@ -1,6 +1,13 @@
 const Doctor = require("../models/Doctor");
 
-
+ /**
+   * @description this method is used to save new doctor records.
+   * @param {*} req 
+   * @param {*} res 
+   * @param {*} next 
+   * @returns 
+   * @date
+   */
 const AddDoctor = async(req, res, next)=>{
     try {
       const {name, role, biography, epxperience, fee } = req.body;
@@ -23,11 +30,20 @@ const AddDoctor = async(req, res, next)=>{
           return res.status(201).json({message:'Inserted successfully', user:req.email, })
       }
     } catch (error) {
-      console.log(error)
+        console.log(error)
+        return res.status(500).json({message:'Faild to add doctor records'})
     }
       
   }
 
+  /**
+   * @description this method is used to update doctor records.
+   * @param {*} req 
+   * @param {*} res 
+   * @param {*} next 
+   * @returns 
+   * @date
+   */
   const UpdateDoctor= async(req, res, next) =>{
     try {
         const {name, role, biography, epxperience, fee } = req.body;
@@ -50,10 +66,19 @@ const AddDoctor = async(req, res, next)=>{
             return res.status(200).json({message:"Doctor updated successfully"})
         }
     } catch (error) {
-        
+        console.log(error)
+        return res.status(500).json({message:'Faild to update doctor records'})
     }
   }
 
+   /**
+   * @description this method is used to remove doctor records given the doctor id.
+   * @param {*} req 
+   * @param {*} res 
+   * @param {*} next 
+   * @returns 
+   * @date
+   */
   const DeleteDoctor = async(req, res, nesxt) =>{
     try {
         const id = req.params.id;
@@ -69,9 +94,18 @@ const AddDoctor = async(req, res, next)=>{
         }
     } catch (error) {
         console.log(error)
+        return res.status(500).json({message:'Faild to delete doctor records'})
     }
   }
 
+   /**
+   * @description this method is used to fetch all doctors and their records.
+   * @param {*} req 
+   * @param {*} res 
+   * @param {*} next 
+   * @returns 
+   * @date
+   */
   const FetchAllDoctor = async(req, res, next) =>{
     try {
         const doctor = await Doctor.find()
@@ -84,10 +118,19 @@ const AddDoctor = async(req, res, next)=>{
     }
     } catch (error) {
         console.log(error)
+        return res.status(500).json({message:'Faild to fetch records'})
     }
   }
 
-  const FetchSingleDoctor = async(req, res, next)=>{
+   /**
+   * @description this method is used to fetch a doctor records given the doctor id.
+   * @param {*} req 
+   * @param {*} res 
+   * @param {*} next 
+   * @returns 
+   * @date
+   */
+  const FetchDoctorById = async(req, res, next)=>{
     try {
         const {id} = req.params;
         const doctor = await Doctor.findById(id)
@@ -100,9 +143,10 @@ const AddDoctor = async(req, res, next)=>{
     }
     } catch (error) {
         console.log(error)
+        return res.status(500).json({message:'Faild to fetch doctor records'})
     }
   }
 
 
 
-  module.exports = {AddDoctor,UpdateDoctor, DeleteDoctor, FetchAllDoctor, FetchSingleDoctor}
+  module.exports = {AddDoctor,UpdateDoctor, DeleteDoctor, FetchAllDoctor, FetchDoctorById}
