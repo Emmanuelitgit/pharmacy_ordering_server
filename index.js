@@ -7,6 +7,8 @@ const orderRoute = require("./routes/Order")
 const appointmentRoute = require("./routes/appointment")
 const doctorRoute = require("./routes/doctor")
 const dotenv = require("dotenv")
+const swaggerUI = require("swagger-ui-express");
+const swaggerSpec = require("./middleware/swagger");
 const app = appMiddleware.app
 dotenv.config();
 
@@ -39,6 +41,7 @@ app.use("/", medicineRoute)
 app.use("/", orderRoute)
 app.use("/", appointmentRoute)
 app.use("/", doctorRoute)
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 
 app.listen(3000, ()=>{
